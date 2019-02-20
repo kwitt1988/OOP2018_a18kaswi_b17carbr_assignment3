@@ -10,9 +10,20 @@ public class CoffeeStorage {
     }
 
     void fillCoffeeStorage(){
-        coffeeStorage.add(new BlackCoffee());
-        coffeeStorage.add(new LatteCoffee());
-        System.out.println(coffeeStorage.get(0).getEnergyValue());
-        System.out.println(coffeeStorage.get(1).getCoffeeType());
+        for(int i = 0; i < 20; i++){
+            addOneRandomCoffee();
+            System.out.println(coffeeStorage.get(i).getCoffeeType());
+        }
+    }
+
+    void addOneRandomCoffee(){
+        int random = (int)(Math.random() * 3) + 1;
+        if(random == 1) {
+            coffeeStorage.add(new BlackCoffee());
+        } else if(random == 2) {
+            coffeeStorage.add(new LatteCoffee());
+        } else coffeeStorage.add(new CappucinoCoffee());
+
     }
 }
+
