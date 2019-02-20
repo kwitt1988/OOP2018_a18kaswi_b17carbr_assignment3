@@ -1,8 +1,8 @@
 package Assignment3;
 
 public class CappucinoCoffee extends Coffee {
-    String coffeeType = "Cappucino";
-    int energyValue = randomEnergyValue(20, 30);
+    private String coffeeType = "Cappucino";
+    private int energyValue = randomEnergyValue(20, 30);
 
     @Override
     public int getEnergyValue() {

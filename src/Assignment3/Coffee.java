@@ -5,7 +5,7 @@ public abstract class Coffee {
     abstract int getEnergyValue();
     abstract String getCoffeeType();
 
-    int randomEnergyValue(int min, int max){
+    public int randomEnergyValue(int min, int max){
         int interval = (max-min) + 1;
         return (int)(Math.random() * interval) + min;
     }

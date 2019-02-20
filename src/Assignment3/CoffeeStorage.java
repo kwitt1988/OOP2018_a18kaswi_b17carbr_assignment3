@@ -3,27 +3,29 @@ package Assignment3;
 import java.util.Vector;
 
 public class CoffeeStorage {
-    Vector<Coffee> coffeeStorage = new Vector(20);
+    private Vector<Coffee> coffeeStorage = new Vector(20);
 
     CoffeeStorage(){
-        fillCoffeeStorage();
     }
 
-    void fillCoffeeStorage(){
-        for(int i = 0; i < 20; i++){
+    public void fillCoffeeStorage(int cupsToAdd){
+        for(int i = cupsToAdd; i > 0; i--){
             addOneRandomCoffee();
-            System.out.println(coffeeStorage.get(i).getCoffeeType());
         }
     }
 
-    void addOneRandomCoffee(){
+    public Coffee getOneCup(){
+        int random = (int)(Math.random() * coffeeStorage.size());
+        return coffeeStorage.get(random);
+    }
+
+    private void addOneRandomCoffee(){
         int random = (int)(Math.random() * 3) + 1;
         if(random == 1) {
             coffeeStorage.add(new BlackCoffee());
         } else if(random == 2) {
             coffeeStorage.add(new LatteCoffee());
         } else coffeeStorage.add(new CappucinoCoffee());
-
     }
 }
 
