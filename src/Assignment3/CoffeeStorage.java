@@ -2,12 +2,9 @@ package Assignment3;
 
 import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class CoffeeStorage {
     private Vector<Coffee> coffeeStorage = new Vector<>();
-    private static Lock lock = new ReentrantLock();
 
     CoffeeStorage(){
         fillCoffeeStorage(20);
@@ -21,7 +18,7 @@ public class CoffeeStorage {
     }
 
     // Get one random cup of coffee from the storage.   Added * And removes that cup
-    public synchronized Coffee getOneCup(){
+    public Coffee getOneCup(){
         int random = (int)(Math.random() * coffeeStorage.size());
         Coffee newCoffee = coffeeStorage.get(random);
         coffeeStorage.remove(random);  // <-- Removes
@@ -45,10 +42,6 @@ public class CoffeeStorage {
         } else if(random == 2) {
             coffeeStorage.addElement(new LatteCoffee());
         } else coffeeStorage.addElement(new CappucinoCoffee());
-    }
-
-    public int getSize(){
-        return coffeeStorage.size();
     }
 }
 
