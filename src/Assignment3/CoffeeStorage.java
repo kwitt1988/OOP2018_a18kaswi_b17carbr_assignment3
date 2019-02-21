@@ -1,8 +1,6 @@
 package Assignment3;
 
 import java.util.Vector;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -11,9 +9,6 @@ public class CoffeeStorage {
     private Vector<Coffee> coffeeStorage = new Vector<>();
     private static Lock lock = new ReentrantLock();
 
-
-
-
     CoffeeStorage(){
     }
 
@@ -21,8 +16,6 @@ public class CoffeeStorage {
     public  void fillCoffeeStorage(int cupsToAdd){
         for(int i = cupsToAdd; i > 0; i--){
             addOneRandomCoffee();
-
-
         }
     }
 
@@ -33,10 +26,7 @@ public class CoffeeStorage {
         coffeeStorage.remove(random);  // <-- Removes
         chanceOnFiveCups(); // <-- Chance to add
         return newCoffee;
-
-
     }
-
 
      // Chance to add five cups to the coffeeStorage when a cup has been consumed
      public void chanceOnFiveCups(){
@@ -50,10 +40,10 @@ public class CoffeeStorage {
     private void addOneRandomCoffee(){
         int random = (int)(Math.random() * 3) + 1;
         if(random == 1) {
-            coffeeStorage.add(new BlackCoffee());
+            coffeeStorage.addElement(new BlackCoffee());
         } else if(random == 2) {
-            coffeeStorage.add(new LatteCoffee());
-        } else coffeeStorage.add(new CappucinoCoffee());
+            coffeeStorage.addElement(new LatteCoffee());
+        } else coffeeStorage.addElement(new CappucinoCoffee());
     }
 }
 
