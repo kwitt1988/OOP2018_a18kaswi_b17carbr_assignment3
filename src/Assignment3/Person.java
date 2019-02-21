@@ -27,9 +27,17 @@ public class Person implements Runnable, MachineInterface{
         System.out.println(name + " is out of energy. Going home.");
     }
 
-    private void useCoffeeMachine(){
+    private synchronized void useCoffeeMachine(){
         while(energy > 0 && energy < 100)
             setEnergy(coffeeMachine.getOneCup());
+    }
+
+    private synchronized void setEnergy(Coffee newCup){
+        energy += newCup.getEnergyValue();
+        if(energy > 100){
+            System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
+        } else System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
+        threadSleep();
     }
 
     private void decrementEnergyLevel(){
@@ -50,13 +58,5 @@ public class Person implements Runnable, MachineInterface{
         } catch(InterruptedException ex){
             System.out.println(ex);
         }
-    }
-
-    private  void setEnergy(Coffee newCup){
-        energy += newCup.getEnergyValue();
-        if(energy > 100){
-            System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
-        } else System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
-        threadSleep();
     }
 }
