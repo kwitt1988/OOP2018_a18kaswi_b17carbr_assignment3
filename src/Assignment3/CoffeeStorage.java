@@ -10,6 +10,7 @@ public class CoffeeStorage {
     private static Lock lock = new ReentrantLock();
 
     CoffeeStorage(){
+        fillCoffeeStorage(20);
     }
 
     // Fill the coffeeStorage with int random cups of coffee.
@@ -44,6 +45,10 @@ public class CoffeeStorage {
         } else if(random == 2) {
             coffeeStorage.addElement(new LatteCoffee());
         } else coffeeStorage.addElement(new CappucinoCoffee());
+    }
+
+    public int getSize(){
+        return coffeeStorage.size();
     }
 }
 
