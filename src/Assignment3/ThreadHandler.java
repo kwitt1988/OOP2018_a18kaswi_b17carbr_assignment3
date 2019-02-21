@@ -12,8 +12,8 @@ public class ThreadHandler {
         executor.execute(new Person("Anders"));
         executor.execute(new Person("Lisa"));
         executor.execute(new Person("Kasper"));
-        executor.execute(new Person("Simon"));
-        executor.execute(new Person("Jonathan"));
+        //executor.execute(new Person("Simon"));
+        //executor.execute(new Person("Jonathan"));
         executor.shutdown();
     }
 }
