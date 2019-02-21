@@ -13,20 +13,20 @@ public class Person implements Runnable{
     public Person(String name){
         this.name = name;
         this.energy = (((int) (Math.random() *  60) + 30));
-        decrementEnergyLevel();
+        threadSleep();
     }
 
     @Override
     public void run() {
         while(energy > 0) {
-            if(lock.tryLock()) {
+            if (lock.tryLock()) {
                 useCoffeeMachine();
                 lock.unlock();
-                if(energy > 100) officeLoop();
             }
+            threadSleep();
         }
-        System.out.println(name + " is tired going home");
     }
+
 
     private void useCoffeeMachine(){
         while(energy > 0 && energy < 100)
@@ -39,30 +39,13 @@ public class Person implements Runnable{
             System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
         } else System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
         System.out.println(coffeeMachine.getCupsLeft() + " cups left.");
-        threadSleep();
-    }
-
-    private void decrementEnergyLevel(){
-        if(energy > 0) {
-            new java.util.Timer().schedule(new TimerTask() {     // <-- Hela tiden i bakgrunden tills att personen energy är helt slut
-                @Override
-                public void run() {
-                    energy -= 10;
-                }
-            }, 1000, 1000);
-        }
-    }
-
-    private void officeLoop(){
-        while(energy > 30){
-            Thread.yield();
-        }
-        System.out.println(name + " is low on coffee, going back to the coffee-room");
     }
 
     private void threadSleep(){
+        energy -= 10;
         try{
             Thread.sleep(1000);
+
         } catch(InterruptedException ex){
             System.out.println(ex);
         }
