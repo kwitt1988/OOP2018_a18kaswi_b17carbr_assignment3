@@ -5,7 +5,7 @@ import java.lang.Math;
 // We use abstract methods instead of implementing here because the methods will use primitive datatypes -
 // which cannot be inherited.
 
-public abstract class Coffee implements MachineInterface {
+public abstract class Coffee {
     abstract int getEnergyValue();
     abstract String getCoffeeType();
 
