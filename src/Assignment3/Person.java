@@ -3,7 +3,7 @@ package Assignment3;
 public class Person implements Runnable{
     String name;
     int energy;
-    // CoffeRoom coffeeRoom = new CoffeRoom();
+    CoffeeStorage coffeeMachine = new CoffeeStorage();
 
     public Person(String name){
         this.name = name;
@@ -15,7 +15,8 @@ public class Person implements Runnable{
         while (energy > 0 && energy < 100 ) {
             if (energy <= 30){
                 System.out.println(name + "has " + energy + " and goes to coffee-room..." );
-                // setEnergy(CoffeeMachine.getCoffee);
+                Coffee newCup = coffeeMachine.getOneCup();
+                setEnergy(newCup);
                 // thread.sleep(1000)
             }
         }
@@ -29,9 +30,9 @@ public class Person implements Runnable{
         }
 
     }
-    public void setEnergy(int newEnergy, String coffeType){  // Kommer vi nog behöva ändra att den tar emot ett objekt av typen KAFFEKOPP.
-        System.out.println(name + " consumes a " + coffeType + " with " + newEnergy + " and now has " + (energy += newEnergy));
-        energy += newEnergy;
+    public void setEnergy(Coffee newCup){  // Kommer vi nog behöva ändra att den tar emot ett objekt av typen KAFFEKOPP.
+        System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy += newCup.getEnergyValue()));
+        energy += newCup.getEnergyValue();
     }
 }
 
