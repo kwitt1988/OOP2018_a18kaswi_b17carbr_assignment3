@@ -1,7 +1,5 @@
 package Assignment3;
 
-import java.io.IOException;
-import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,35 +11,31 @@ public class Person implements Runnable{
 
     public Person(String name){
         this.name = name;
-        this.energy = (((int) (Math.random() *  30) + 1));
+        this.energy = (((int) (Math.random() *  60) + 30));
     }
 
     private void decrementEnergyLevel(){
-        if (energy > 0){
-            try{
-                energy = energy - 10;
-                Thread.sleep(1000);
-            } catch(InterruptedException ex){
-                System.out.println(ex);
-            }
-        }
-        else if(energy <= 0){
-            System.out.println("Tired - going home");
+        try{
+            energy -=10;
+            Thread.sleep(1000);
+        } catch(InterruptedException ex){
+            System.out.println(ex);
         }
     }
 
+
     @Override
     public void run() {
-        if (energy > 0 && energy < 100) {
-            System.out.println(name + " has " + energy + " energy and goes to coffee room");
+        while(energy > 0){
+            useCoffeeMachine();
             decrementEnergyLevel();
+            if(energy > 100){
+                while(energy > 30){
+                    decrementEnergyLevel();
+                }
+            }
         }
-        do {useCoffeeMachine();
-        }
-        while(energy > 0 && energy < 100);
-        if (energy <= 0){
-            System.out.println("Tired going home");
-        }
+        System.out.println("Tired going home");
     }
 
     private void useCoffeeMachine(){
