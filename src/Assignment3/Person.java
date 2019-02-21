@@ -1,5 +1,6 @@
 package Assignment3;
 
+import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -11,20 +12,25 @@ public class Person implements Runnable, MachineInterface{
     public Person(String name){
         this.name = name;
         this.energy = (((int) (Math.random() *  60) + 30));
+        decrementEnergyLevel();   // <-- När personen skapas så börjar den dra energy direkt
     }
 
     @Override
     public void run() {
         while(energy > 0){
-            if(lock.tryLock()){
+            if(lock.tryLock()) {
                 useCoffeeMachine();
-                lock.unlock();}
-            else {
-                decrementEnergyLevel();
+                lock.unlock();
+                try {
+                    Thread.sleep(1000);    // <--  ingen bra lösning på " Similarly, you may assume a person spends 1 second drinking a given cup. " 
+                    System.out.println(name + " sleep");
+                } catch (InterruptedException ex) {
+                    System.out.print(ex);
+                }
             }
-            if(energy > 100) officeLoop();
+            //if(energy > 100) officeLoop(); // <-- Denna får man fixa
         }
-        System.out.println(name + " is out of energy. Going home.");
+        System.out.println(name + "Tired going home");
     }
 
     private synchronized void useCoffeeMachine(){
@@ -41,14 +47,17 @@ public class Person implements Runnable, MachineInterface{
     }
 
     private void decrementEnergyLevel(){
-        this.energy -=10;
-        threadSleep();
+        if(energy > 0) {
+            new java.util.Timer().schedule(new TimerTask() {     // <-- Hela tiden i bakgrunden tills att personen energy är helt slut
+                @Override
+                public void run() {
+                    energy -= 10;
+                }
+            }, 1000, 1000);
+        }
     }
 
     private void officeLoop(){
-        while(energy > 30){
-            decrementEnergyLevel();
-        }
         System.out.println(name + " is low on coffee, going back to the coffee-room");
     }
 
