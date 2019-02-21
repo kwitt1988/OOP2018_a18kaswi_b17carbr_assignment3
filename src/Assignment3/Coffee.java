@@ -1,7 +1,11 @@
 package Assignment3;
-        import java.lang.Math;
+import java.lang.Math;
 
-public abstract class Coffee {
+// Superclass for Coffee which includes an random-number generator and abstract getters.
+// We use abstract methods instead of implementing here because the methods will use primitive datatypes -
+// which cannot be inherited.
+
+public abstract class Coffee implements MachineInterface {
     abstract int getEnergyValue();
     abstract String getCoffeeType();
 
