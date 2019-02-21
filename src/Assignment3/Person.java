@@ -1,58 +1,62 @@
 package Assignment3;
 
-import java.sql.Time;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Person implements Runnable {
-    String name;
-    int energy;
-    Timer timer = new Timer();
+public class Person implements Runnable, MachineInterface{
+    private String name;
+    private int energy;
+    private static Lock lock = new ReentrantLock();
 
-    CoffeeStorage coffeeMachine = new CoffeeStorage();
-
-    public Person(String name) {
-        coffeeMachine.fillCoffeeStorage(20);
+    public Person(String name){
         this.name = name;
-        this.energy = (((int) (Math.random() * 90) + 30));
+        this.energy = (((int) (Math.random() *  60) + 30));
     }
 
     @Override
     public void run() {
-        if (energy > 0 && energy < 100) {
-            System.out.println(name + " has " + energy + " energy and goes to coffee room");
+        while(energy > 0){
+            if(lock.tryLock()){
+                useCoffeeMachine();
+                lock.unlock();}
+            else {
+                decrementEnergyLevel();
+            }
+            if(energy > 100) officeLoop();
         }
-        while (energy > 0 && energy < 100) {
-            useCoffeeMachine();
-            timer.scheduleAtFixedRate(energyDrained, 1000, 1000);
+        System.out.println(name + " is out of energy. Going home.");
+    }
 
+    private void useCoffeeMachine(){
+        while(energy > 0 && energy < 100)
+            setEnergy(coffeeMachine.getOneCup());
+    }
+
+    private void decrementEnergyLevel(){
+        this.energy -=10;
+        threadSleep();
+    }
+
+    private void officeLoop(){
+        while(energy > 30){
+            decrementEnergyLevel();
+        }
+        System.out.println(name + " is low on coffee, going back to the coffee-room");
+    }
+
+    private void threadSleep(){
+        try{
+            Thread.sleep(1000);
+        } catch(InterruptedException ex){
+            System.out.println(ex);
         }
     }
 
-    public void EnergyDrainedTimer() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(call, 1000, 1000);
-    synchronized TimerTask call = new TimerTask() {
-        @Override
-        public void run() {
-            energy++;
-
-        }
-    };
-}
-
-
-    public synchronized void useCoffeeMachine(){
-        setEnergy(coffeeMachine.getOneCup());
-    }
-
-    public void setEnergy(Coffee newCup){
+    private  void setEnergy(Coffee newCup){
         energy += newCup.getEnergyValue();
-        if(energy > 0 && energy < 100){
-            System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
-        } else if(energy >= 100){
+        if(energy > 100){
             System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
-        }
+        } else System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
+        threadSleep();
     }
 }
-
