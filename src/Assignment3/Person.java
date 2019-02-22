@@ -4,11 +4,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Person implements Runnable{
-    private volatile Thread quit;
+    private boolean active = true;
     private String name;
     private int energy;
     private static Lock lock = new ReentrantLock();
-    static CoffeeStorage coffeeMachine = new CoffeeStorage();
+    CoffeeStorage coffeeMachine = CoffeeStorage.getInstance();
 
     public Person(String name){
         this.name = name;
@@ -17,8 +17,11 @@ public class Person implements Runnable{
 
     @Override
     public void run() {
-        while(true){
-            if(energy > 100){
+        System.out.println(name + " entered the building with " + energy + " energy.");
+        Thread.yield();
+        while(active){
+            Thread.yield();
+            if(energy >= 100){
                 officeRoom();
             } else if(energy > 0){
                 coffeeRoom();
@@ -28,41 +31,61 @@ public class Person implements Runnable{
         }
     }
 
-    private void officeRoom(){
-        while(energy >= 30){
-            threadUpdate();
-        }
-        System.out.println(name + " is low on energy so goes to get coffee.");
-    }
-
     private void coffeeRoom(){
         while(energy > 0 && energy < 100)
-        if (lock.tryLock()) {
-            useCoffeeMachine();
-            lock.unlock();
-        } threadUpdate();
+            if(lock.tryLock()){
+                useCoffeeMachine();
+                lock.unlock();
+            } else {
+                decrementEnergy();
+            }
+        }
+
+
+    private void officeRoom(){
+        while(energy >= 30){
+            decrementEnergy();
+        }
+        System.out.println(name + " is low on energy so goes to get coffee.");
+        decrementEnergy();
     }
 
     private void exitRoom(){
-        quit = null;
+        System.out.println(name + " is out of energy - going home");
+        active = false;
     }
 
-    private synchronized void useCoffeeMachine(){
-        while(energy > 0 && energy < 100)
-            setEnergy(coffeeMachine.getOneCup());
-            threadUpdate();
+    private void useCoffeeMachine(){
+        while(energy > 0 && energy < 100) {
+            Coffee newCup = coffeeMachine.getOneCup();
+            setEnergy(newCup);
+            if(energy > 100){
+                System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
+            } else {
+                System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
+                System.out.println(coffeeMachine.getCupsLeft() + " cups left.");
+            }
+            coffeeMachine.chanceOnFiveCups();
+            threadSleep();
+        }
+
     }
 
-    private synchronized void setEnergy(Coffee newCup){
+    private void setEnergy(Coffee newCup){
         energy += newCup.getEnergyValue();
-        if(energy > 100){
-            System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
-        } else System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
-        System.out.println(coffeeMachine.getCupsLeft() + " cups left.");
     }
 
-    private void threadUpdate(){
+    private void decrementEnergy(){
         energy -= 10;
+        try{
+            Thread.sleep(1000);
+
+        } catch(InterruptedException ex){
+            System.out.println(ex);
+        }
+    }
+
+    private void threadSleep(){
         try{
             Thread.sleep(1000);
 

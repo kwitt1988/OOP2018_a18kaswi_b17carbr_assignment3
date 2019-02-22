@@ -5,9 +5,16 @@ import java.lang.Math;
 // We use abstract methods instead of implementing here because the methods will use primitive datatypes -
 // which cannot be inherited.
 
-public abstract class Coffee {
-    abstract int getEnergyValue();
-    abstract String getCoffeeType();
+public class Coffee {
+    int energyValue = 0;
+    String coffeeType = "";
+
+    int getEnergyValue(){
+        return energyValue;
+    };
+    String getCoffeeType(){
+        return coffeeType;
+    };
 
     public int randomEnergyValue(int min, int max){
         int interval = (max-min) + 1;

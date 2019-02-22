@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 public class ThreadHandler {
     void startThreads(){
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        ExecutorService executor = Executors.newFixedThreadPool(3);
         executor.execute(new Person("Anders"));
         executor.execute(new Person("Lisa"));
         executor.execute(new Person("Kasper"));
