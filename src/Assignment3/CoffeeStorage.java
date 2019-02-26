@@ -60,7 +60,7 @@ public class CoffeeStorage {
 
     // Add one random cup of coffee to the storage.
     // We get a random number from 1-3. Based on that number one beverage will be added to the storage.
-    private void addOneRandomCoffee(){
+    private synchronized void addOneRandomCoffee(){
         int random = (int)(Math.random() * 3) + 1;
         if(random == 1) {
             Coffee newBlack = new BlackCoffee();
