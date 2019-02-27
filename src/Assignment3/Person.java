@@ -4,11 +4,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Person implements Runnable{
+    private boolean active = true;
     private String name;
     private int energy;
     private static Lock lock = new ReentrantLock();
-    private boolean active = true;
-    private CoffeeStorage coffeeMachine = CoffeeStorage.getInstance();
+    CoffeeStorage coffeeMachine = CoffeeStorage.getInstance();
 
     public Person(String name){
         this.name = name;
@@ -20,6 +20,7 @@ public class Person implements Runnable{
         System.out.println(name + " entered the building with " + energy + " energy.");
         Thread.yield();
         while(active){
+            Thread.yield();
             if(energy >= 100){
                 officeRoom();
             } else if(energy > 0){
@@ -28,14 +29,6 @@ public class Person implements Runnable{
                 exitRoom();
             }
         }
-    }
-
-    private void officeRoom(){
-        while(energy >= 30){
-            decrementEnergy();
-        }
-        System.out.println(name + " is low on energy so goes to get coffee.");
-        decrementEnergy();
     }
 
     private void coffeeRoom(){
@@ -48,6 +41,15 @@ public class Person implements Runnable{
             }
         }
 
+
+    private void officeRoom(){
+        while(energy >= 30){
+            decrementEnergy();
+        }
+        System.out.println(name + " is low on energy so goes to get coffee.");
+        decrementEnergy();
+    }
+
     private void exitRoom(){
         System.out.println(name + " is out of energy - going home");
         active = false;
@@ -58,9 +60,9 @@ public class Person implements Runnable{
             Coffee newCup = coffeeMachine.getOneCup();
             setEnergy(newCup);
             if(energy > 100){
-                System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " energy and now has " + (energy) + " energy - and goes to office");
+                System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy) + " and goes to office");
             } else {
-                System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " energy and now has " + (energy) + " energy - drinks more.");
+                System.out.println(name + " consumes a " + newCup.getCoffeeType() + " with " + newCup.getEnergyValue() + " and now has " + (energy));
                 System.out.println(coffeeMachine.getCupsLeft() + " cups left.");
             }
             coffeeMachine.chanceOnFiveCups();
