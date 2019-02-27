@@ -9,12 +9,13 @@ public class Coffee {
     int energyValue = 0;
     String coffeeType = "";
 
-    int getEnergyValue(){
+    public int getEnergyValue(){
         return energyValue;
-    };
-    String getCoffeeType(){
+    }
+
+    public String getCoffeeType(){
         return coffeeType;
-    };
+    }
 
     public int randomEnergyValue(int min, int max){
         int interval = (max-min) + 1;
