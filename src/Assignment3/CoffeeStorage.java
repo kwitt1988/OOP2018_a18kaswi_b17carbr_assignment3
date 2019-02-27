@@ -1,12 +1,16 @@
 package Assignment3;
+
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 // CoffeeStorage is a class which provides the storing of coffee and methods connected to it.
-// The class is designed as an singleton class so that all threads access the same storage.
-// We could try to implement an synchronized list.
+// We use a Vector because several threads will try to access it. Even though -
+// our locks should prevent race-conditions from happening this is an extra layer of protection to prevent -
+// the data from being corrupt.
 
 public class CoffeeStorage {
     private ArrayList<Coffee> coffeeStorage = new ArrayList<>();
+
     private static CoffeeStorage obj;
 
     private CoffeeStorage(){
@@ -31,19 +35,6 @@ public class CoffeeStorage {
         return newCoffee;
     }
 
-    // Method used to check cups left.
-    public synchronized int getCupsLeft(){
-        return coffeeStorage.size();
-    }
-
-    // Chance to add five cups to the coffeeStorage when a cup has been consumed
-    public synchronized void chanceOnFiveCups(){
-        int random = (int)(Math.random() * 5) + 1;
-        if(random == 1){
-            fillCoffeeStorage(5);
-        }
-    }
-
     // Fill the coffeeStorage with int random cups of coffee.
     private synchronized void fillCoffeeStorage(int cupsToAdd){
         System.out.println("------ " + cupsToAdd + " CUPS SPAWNED ------");
@@ -51,6 +42,20 @@ public class CoffeeStorage {
             addOneRandomCoffee();
         }
         System.out.println("--------------------------------------------");
+    }
+
+    // Method used to check cups left.
+    public int getCupsLeft(){
+        return coffeeStorage.size();
+    }
+
+    // Chance to add five cups to the coffeeStorage when a cup has been consumed
+    public void chanceOnFiveCups(){
+
+        int random = (int)(Math.random() * 5) + 1;
+        if(random == 1){
+            fillCoffeeStorage(5);
+        }
     }
 
     // Add one random cup of coffee to the storage.
